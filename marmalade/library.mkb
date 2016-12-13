@@ -1,0 +1,61 @@
+#!/usr/bin/env mkb
+options
+{
+}
+
+includepaths
+{
+	../source/
+	../source/libinc/
+}
+
+packages
+{
+	timyxml
+}
+	
+subprojects
+{
+	iw2d
+	tinyxml
+}
+
+files
+{
+	["main"]
+	../main.cpp
+	../main.h
+	
+	(../source)
+	chilli.h
+	
+	["misc"]
+	(../source/lib/misc)
+	"*.cpp"
+	
+	["os"]
+	(../source/lib/os)
+	"*.cpp"
+		
+	["sw"]
+	(../source/lib/sw)
+	"*.cpp"
+
+	["inc"]
+	(../source/libinc)
+	"*.h"
+
+	["inc/misc"]
+	(../source/libinc/misc)
+	"*.h"
+
+	["inc/os"]
+	(../source/libinc/os)
+	"*.h"
+
+	["inc/sw"]
+	(../source/libinc/sw)
+	"*.h"
+
+
+}
