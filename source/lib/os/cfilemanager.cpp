@@ -16,13 +16,13 @@
 
 #if 1
 
-//#include "needwindows.h"
 #include "../../libinc/library.h"
 #include <stdio.h>
 
+#ifdef _MARMALADE_
 #include "IwFile.h"
-
 #include "S3EFile.h"
+#endif
 
 namespace chilli {
 
@@ -267,8 +267,9 @@ namespace chilli {
 
 		BOOL filemanager::Exists ( LPCSTR lpFileName )
 		{
-			
-		/*
+#ifdef _MARMALADE_
+            return IwFileCheckExists(lpFileName);
+#else
 		#if defined(_UNIX_) || defined(_LINUX_)
 		filelist files;
 			files.CreateDir ( (LPSTR)lpFileName );
@@ -287,16 +288,17 @@ namespace chilli {
 			delete pFile;
 			return TRUE ;
 		#endif
-		 */
-			return IwFileCheckExists(lpFileName);
+#endif
+
 		}
         
         s64 filemanager::DateTime(LPCSTR lpFileName)
         {
-        
+#ifdef _MARMALADE_
             int64 value = s3eFileGetFileInt(lpFileName, S3E_FILE_MODIFIED_DATE);
-            
             return value ;
+#endif
+            return 0;
         }
         
         
@@ -311,8 +313,11 @@ namespace chilli {
 
 		BOOL filemanager::Rename(LPCSTR lpszOldName, LPCSTR lpszNewName)
 		{
-			//return rename((LPSTR)lpszOldName, (LPSTR)lpszNewName) == 0;
+#ifdef _MARMALADE_
             return s3eFileRename(lpszOldName, lpszNewName ) == S3E_RESULT_SUCCESS ;
+#else
+            return rename((LPSTR)lpszOldName, (LPSTR)lpszNewName) == 0;
+#endif
         }
 
 		BOOL filemanager::Remove(LPCSTR lpszFileName)
@@ -321,8 +326,10 @@ namespace chilli {
 		}
         
         BOOL filemanager::Copy ( LPCSTR lpszSrcName, LPCSTR lpszDstName )
-        {    
+        {
+#ifdef _MARMALADE_
             return IwFileCopy( lpszDstName, lpszSrcName ) == S3E_RESULT_SUCCESS ;
+#endif
         }
         
 		BOOL filemanager::CreateDirectory(LPCSTR path)
@@ -330,14 +337,17 @@ namespace chilli {
 		#ifdef WIN32
 			return ::CreateDirectory(path,NULL);
 		#else
+            #ifdef _MARMALADE_
             if ( s3eFileMakeDirectory (path) == S3E_RESULT_SUCCESS )
                 return TRUE;
 			return FALSE ;
+            #endif
 		#endif
 		}
         
         BOOL filemanager::DestroyDirectory ( LPCSTR path )
         {
+#ifdef _MARMALADE_
             char filename[MAX_PATH]={0};
             char filename2[MAX_PATH]={0};
             
@@ -352,10 +362,10 @@ namespace chilli {
             }
             
             s3eFileListClose(file);
+#endif
             
             return TRUE ;
             
-            //return IwFileRmTree(path) == S3E_RESULT_SUCCESS ;
         }
 
 		/*

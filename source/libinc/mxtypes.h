@@ -8,9 +8,9 @@
 #define __MACOSX__
 #endif
 
-
+#ifdef _MARMALADE_
 #include <malloc.h>
-
+#endif
 
 #define SAFEFREE(x)	\
 	if ( x ) { free(x); x=NULL; }
